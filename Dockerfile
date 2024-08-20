@@ -1,7 +1,6 @@
-FROM --platform=$TARGETPLATFORM golang:1.16.5-alpine3.13 as gobuilder
+FROM golang:alpine3.20 as gobuilder
 
 ENV GO111MODULE="on"
-ENV GOPROXY="https://goproxy.cn,direct"
 ENV CGO_ENABLED=0
 
 WORKDIR /go/src/app
