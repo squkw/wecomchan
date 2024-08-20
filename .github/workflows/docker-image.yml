@@ -31,4 +31,5 @@ jobs:
       with:
        context: .
        push: true
+       tag: tree/wecomchan:latest
           
