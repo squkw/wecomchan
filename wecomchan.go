@@ -260,11 +260,12 @@ func main() {
 		}
 		msgContent := req.FormValue("msg")
 		title := req.FormValue("title")
-		description := req.FormValue("description")
-		picurl := req.FormValue("picurl")
-		url := req.FormValue("url")
+		content := req.FormValue("content")
+		contentSourceUrl := req.FormValue("content_source_url")
+		thumbMediaId := req.FormValue("thumb_media_id")
 		msgType := req.FormValue("msg_type")
 		log.Println("mes_type=", msgType)
+
 		// 默认mediaId为空
 		mediaId := ""
 		if msgType != "image" {
@@ -292,13 +293,13 @@ func main() {
 		postData.Image = Pic{
 			MediaId: mediaId,
 		}
-		postData.News = News{
+		postData.MpNews = MpNews{
 			Articles: []Article {
 				Article {
 					Title: title,
-					Description: description,
-					Url: url,
-					PicUrl: picurl,
+					Content: content,
+					ContentSourceUrl: contentSourceUrl,
+					ThumbMediaId: thumbMediaId,
 				},
 			},
 		}
