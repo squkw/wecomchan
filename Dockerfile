@@ -1,4 +1,4 @@
-FROM golang:alpine3.20 as gobuilder
+FROM --platform=$TARGETPLATFORM golang:alpine3.20 as gobuilder
 
 ENV GO111MODULE="on"
 ENV CGO_ENABLED=0
