@@ -19,6 +19,7 @@ import (
 
 /*-------------------------------  环境变量配置 begin  -------------------------------*/
 
+var WecomHost = GetEnvDefault("WECOM_HOST", "https://qyapi.weixin.qq.com")
 var Sendkey = GetEnvDefault("SENDKEY", "set_a_sendkey")
 var WecomCid = GetEnvDefault("WECOM_CID", "企业微信公司ID")
 var WecomSecret = GetEnvDefault("WECOM_SECRET", "企业微信应用Secret")
@@ -33,9 +34,9 @@ var ctx = context.Background()
 
 /*-------------------------------  企业微信服务端API begin  -------------------------------*/
 
-var GetTokenApi = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s"
-var SendMessageApi = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s"
-var UploadMediaApi = "https://qyapi.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s"
+var GetTokenApi = WecomHost + "/cgi-bin/gettoken?corpid=%s&corpsecret=%s"
+var SendMessageApi = WecomHost + "/cgi-bin/message/send?access_token=%s"
+var UploadMediaApi = WecomHost + "/cgi-bin/media/upload?access_token=%s&type=%s"
 
 /*-------------------------------  企业微信服务端API end  -------------------------------*/
 
@@ -47,6 +48,15 @@ type Msg struct {
 type Pic struct {
 	MediaId string `json:"media_id"`
 }
+type Article struct {
+	Title string `json:"title"`
+	Content string `json:"content"`
+	ContentSourceUrl string `json:"content_source_url"`
+	ThumbMediaId string `json:"thumb_media_id"`
+}
+type MpNews struct {
+    Articles []Article   `json:"articles"`
+}
 type JsonData struct {
 	ToUser                 string `json:"touser"`
 	AgentId                string `json:"agentid"`
@@ -54,6 +64,7 @@ type JsonData struct {
 	DuplicateCheckInterval int    `json:"duplicate_check_interval"`
 	Text                   Msg    `json:"text"`
 	Image                  Pic    `json:"image"`
+	MpNews                 MpNews `json:"mpnews"`
 }
 
 // GetEnvDefault 获取配置信息，未获取到则取默认值
@@ -248,6 +259,10 @@ func main() {
 			log.Panicln("sendkey 错误，请检查")
 		}
 		msgContent := req.FormValue("msg")
+		title := req.FormValue("title")
+		description := req.FormValue("description")
+		picurl := req.FormValue("picurl")
+		url := req.FormValue("url")
 		msgType := req.FormValue("msg_type")
 		log.Println("mes_type=", msgType)
 		// 默认mediaId为空
@@ -276,6 +291,16 @@ func main() {
 		}
 		postData.Image = Pic{
 			MediaId: mediaId,
+		}
+		postData.News = News{
+			Articles: []Article {
+				Article {
+					Title: title,
+					Description: description,
+					Url: url,
+					PicUrl: picurl,
+				},
+			},
 		}
 
 		postStatus := ""
