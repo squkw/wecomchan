@@ -8,6 +8,7 @@ COPY . .
 
 RUN apk update && apk upgrade && apk add --no-cache ca-certificates
 RUN update-ca-certificates
+SHELL ["/bin/bash", "-c"]
 RUN go build
 
 FROM scratch
